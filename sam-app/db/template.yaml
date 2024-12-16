@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  db-tier
+  
+  Template for DB tier
+
+Resources:
+  CounterStorage:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: CounterTable
+      PrimaryKey:
+        Name: name
+        Type: String
+
+  S3Website:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      BucketName: manmapi-cv
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+
+  S3WebsitePolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: manmapi-cv
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 's3:GetObject'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref S3Website
+                - /*
+            Principal: '*'
+
+Outputs:
+  CounterStorage:
+    Description: "DynamoDB Table Name"
+    Value: !Ref CounterStorage
+
+  S3Website:
+    Description: "S3Website URL"
+    Value: !GetAtt S3Website.WebsiteURL

@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Template for API Gateway, DNS, CloudFront
+
+Parameters:
+  S3WebsiteURL:
+    Type: String
+    Description: URL of S3 Website
+
+
+Resources:
+  S3WebsiteDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Aliases:
+          - staging.duytrn.com
+        ViewerCertificate:
+          AcmCertificateArn: arn:aws:acm:us-east-1:869935094432:certificate/897d938e-68d1-463b-9b3b-df7c79e41973
+          SslSupportMethod: sni-only
+        Origins:
+          - DomainName: !Select
+              - 1
+              - !Split
+                - http://
+                - !Ref S3WebsiteURL
+            Id: s3_website_url
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          TargetOriginId: s3_website_url
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: true
+
+  WebsiteDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName: !GetAtt S3WebsiteDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+      HostedZoneId: Z021667325Y5Y19G7NONS
+      Type: A
+      Name: staging.duytrn.com

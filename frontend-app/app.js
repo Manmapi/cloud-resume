@@ -1,4 +1,4 @@
-const base_url = "https://g7s27ju6s6.execute-api.ap-southeast-1.amazonaws.com/prod/counter?name=visited"
+const base_url = "https://omrag3vlab.execute-api.ap-southeast-1.amazonaws.com/prod/counter?name=visited"
 
 const getVisitedCount = () => {
     const options = {

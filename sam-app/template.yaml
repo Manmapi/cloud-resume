@@ -3,159 +3,24 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   sam-app
   
-  SAM Template for sam-app
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-    Timeout: 60
+  Root stack for application
 
 Resources:
-  MyApi:
-    Type: AWS::Serverless::Api
+  Database:
+    Type: AWS::Serverless::Application
     Properties:
-      StageName: prod
-      MethodSettings:
-        - HttpMethod: "*"
-          ResourcePath: "/*"
-          ThrottlingRateLimit: 20
-          ThrottlingBurstLimit: 10
-      Cors:
-        AllowMethods: "'*'"
-        AllowHeaders: "'*'"
-        AllowOrigin: "'*'"
-        AllowCredentials: false
+      Location: db/template.yaml
 
-  GetCounterFunction:
-    Type: AWS::Serverless::Function
+  Functions:
+    Type: AWS::Serverless::Application
     Properties:
-      CodeUri: counter_read/
-      Handler: app.lambda_handler
-      Runtime: python3.10
-      Architectures:
-        - x86_64
-      Events:
-        GetCounter:
-          Type: Api
-          Properties:
-            Path: /counter
-            Method: get
-            RestApiId: !Ref MyApi
-            RequestParameters:
-              - method.request.querystring.name:
-                  Required: true
-                  Caching: false
-        PostCounter:
-          Type: Api
-          Properties:
-            Path: /counter
-            Method: post
-            RestApiId: !Ref MyApi
-            RequestParameters:
-              - method.request.querystring.name:
-                  Required: true
-                  Caching: false
+      Location: api/template.yaml
+      Parameters:
+        CounterStorage: !GetAtt Database.Outputs.CounterStorage
 
-  S3Website:
-    Type: AWS::S3::Bucket
+  Routers:
+    Type: AWS::Serverless::Application
     Properties:
-      PublicAccessBlockConfiguration:
-        BlockPublicPolicy: false
-        RestrictPublicBuckets: false
-      BucketName: manmapi-cv
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: error.html
-
-
-
-  S3WebsitePolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: manmapi-cv
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-            - Action:
-              - 's3:GetObject'
-              Effect: Allow
-              Resource: !Join
-                - ''
-                - - 'arn:aws:s3:::'
-                  - !Ref S3Website
-                  - /*
-              Principal: '*'
-
-  CounterStorage:
-    Type: AWS::Serverless::SimpleTable
-    Properties:
-      TableName: CounterTable
-      PrimaryKey:
-        Name: name
-        Type: String
-
-  GetCounterFunctionCounterStorageConnector:
-    Type: AWS::Serverless::Connector
-    Properties:
-      Source:
-        Id: GetCounterFunction
-      Destination:
-        Id: CounterStorage
-      Permissions:
-        - Read
-        - Write
-
-  S3WebsiteDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Enabled: true
-        Aliases:
-          - staging.duytrn.com
-        ViewerCertificate:
-          AcmCertificateArn: arn:aws:acm:us-east-1:869935094432:certificate/897d938e-68d1-463b-9b3b-df7c79e41973
-          SslSupportMethod: sni-only
-        Origins:
-          - DomainName: !Select
-            - 1
-            - !Split
-              - http://
-              - !GetAtt S3Website.WebsiteURL
-            Id: s3_website_url
-            CustomOriginConfig:
-              OriginProtocolPolicy: http-only
-        DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          TargetOriginId: s3_website_url
-          ViewerProtocolPolicy: redirect-to-https
-          ForwardedValues:
-            QueryString: true
-
-  WebsiteDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      AliasTarget:
-        DNSName: !GetAtt S3WebsiteDistribution.DomainName
-        HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId: Z021667325Y5Y19G7NONS
-      Type: A
-      Name: staging.duytrn.com
-
-Outputs:
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  GetCounterFunction:
-    Description: "Lambda Counter Function"
-    Value: !GetAtt GetCounterFunction.Arn
-  GetCounterFunctionIamRole:
-    Description: "Implicit IAM Role created for Lambda Counter function"
-    Value: !GetAtt GetCounterFunctionRole.Arn
-  WebsiteURl:
-    Description: "Website URL"
-    Value: !GetAtt
-      - S3Website
-      - WebsiteURL
-      
+      Location: router/template.yaml
+      Parameters:
+        S3WebsiteURL: !GetAtt Database.Outputs.S3Website

@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Template for Lambda functions
+
+Parameters:
+  CounterStorage:
+    Type: String
+    Description: DynamoDB Counter Table
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 20
+    Runtime: python3.10
+    Architectures:
+      - x86_64
+
+Resources:
+
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          ThrottlingRateLimit: 20
+          ThrottlingBurstLimit: 10
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        AllowCredentials: false
+
+  GetCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/counter_handler/
+      Handler: app.lambda_handler
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref CounterStorage
+        - DynamoDBReadPolicy:
+            TableName: !Ref CounterStorage
+
+      Events:
+        GetCounter:
+          Type: Api
+          Properties:
+            Path: /counter
+            Method: get
+            RestApiId: !Ref ApiGateway
+            RequestParameters:
+              - method.request.querystring.name:
+                  Required: true
+                  Caching: false
+        PostCounter:
+          Type: Api
+          Properties:
+            Path: /counter
+            Method: post
+            RestApiId: !Ref ApiGateway
+            RequestParameters:
+              - method.request.querystring.name:
+                  Required: true
+                  Caching: false
+
+Outputs:
+  CounterHandler:
+    Description: "Counter Handler"
+    Value: !Ref GetCounterFunction
