@@ -1,3 +1,5 @@
+const base_url = "https://g7s27ju6s6.execute-api.ap-southeast-1.amazonaws.com/prod/counter?name=visited"
+
 const getVisitedCount = () => {
     const options = {
         method: "GET",
@@ -6,8 +8,7 @@ const getVisitedCount = () => {
             "Content-Type": "application/json",
         }
     }
-    const url = "https://8k6fwtmqmg.execute-api.ap-southeast-1.amazonaws.com/prod/counter?name=visited"
-    fetch(url, options).then(response => response.json())
+    fetch(base_url, options).then(response => response.json())
     .then(data => {
         let count = data["counted"]["N"]
         const counterDisplay = document.querySelector(".counter-display")
@@ -22,8 +23,7 @@ const updateVisitedCount = () => {
             "Content-Type": "application/json",
         }
     }
-    const url = "https://8k6fwtmqmg.execute-api.ap-southeast-1.amazonaws.com/prod/counter?name=visited"
-    fetch(url, options).catch(console.error)
+    fetch(base_url, options).catch(console.error)
 }
 
 if(window.attachEvent) {

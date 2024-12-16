@@ -24,10 +24,29 @@ def handle_get(event):
             }
         }
     )
+    item = response.get("Item")
+    if not item:
+        # Handle case row is not existed
+        client.put_item(
+            TableName="CounterTable",
+            Item={
+                "name": {
+                    "S": key_name
+                },
+                "counted": {
+                    "N": "1"
+                }
+            }
+        )
+        item = {
+            "counted": {
+                "N": "1"
+            }
+        }
 
     return {
         "statusCode": 200,
-        "body": json.dumps(response.get("Item")),
+        "body": json.dumps(item),
         "headers": {
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",
@@ -47,7 +66,7 @@ def handle_post(event):
             })
         }
     try:
-        response = client.update_item(
+        _response = client.update_item(
             TableName="CounterTable",
             Key={
                 "name": {
