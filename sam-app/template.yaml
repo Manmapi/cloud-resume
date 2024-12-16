@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+
+  Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        AllowCredentials: false
+
+  GetCounterFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: counter_read/
+      Handler: app.lambda_handler
+      Runtime: python3.10
+      Architectures:
+        - x86_64
+      Events:
+        GetCounter:
+          Type: Api
+          Properties:
+            Path: /counter
+            Method: get
+            RestApiId: !Ref MyApi
+            RequestParameters:
+              - method.request.querystring.name:
+                  Required: true
+                  Caching: false
+        PostCounter:
+          Type: Api
+          Properties:
+            Path: /counter
+            Method: post
+            RestApiId: !Ref MyApi
+            RequestParameters:
+              - method.request.querystring.name:
+                  Required: true
+                  Caching: false
+
+
+  S3Website:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      BucketName: manmapi-website
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+
+  S3WebsitePolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: manmapi-website
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+            - Action:
+              - 's3:GetObject'
+              Effect: Allow
+              Resource: !Join
+                - ''
+                - - 'arn:aws:s3:::'
+                  - !Ref S3Website
+                  - /*
+              Principal: '*'
+#              Condition:
+#                StringLike:
+#                  'aws:Referer':
+#                    - 'http://www.example.com/*'
+#                    - 'http://example.net/*'
+  CounterStorage:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: CounterTable
+      PrimaryKey:
+        Name: name
+        Type: String
+
+  GetCounterFunctionCounterStorageConnector:
+    Type: AWS::Serverless::Connector
+    Properties:
+      Source:
+        Id: GetCounterFunction
+      Destination:
+        Id: CounterStorage
+      Permissions:
+        - Read
+        - Write
+
+Outputs:
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  GetCounterFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt GetCounterFunction.Arn
+  GetCounterFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt GetCounterFunctionRole.Arn
