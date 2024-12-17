@@ -8,7 +8,6 @@ Parameters:
     Type: String
     Description: URL of S3 Website
 
-
 Resources:
   S3WebsiteDistribution:
     Type: AWS::CloudFront::Distribution
@@ -16,9 +15,9 @@ Resources:
       DistributionConfig:
         Enabled: true
         Aliases:
-          - staging.duytrn.com
+          - '{{resolve:ssm:/my_cv/domain_name}}'
         ViewerCertificate:
-          AcmCertificateArn: arn:aws:acm:us-east-1:869935094432:certificate/897d938e-68d1-463b-9b3b-df7c79e41973
+          AcmCertificateArn: "{{resolve:ssm:/my_cv/acm_certificate_arn}}"
           SslSupportMethod: sni-only
         Origins:
           - DomainName: !Select
@@ -44,7 +43,8 @@ Resources:
     Properties:
       AliasTarget:
         DNSName: !GetAtt S3WebsiteDistribution.DomainName
+        # Default HostedZoneId for CloudFront service. https://docs.aws.amazon.com/Route53/latest/APIReference/API_AliasTarget.html
         HostedZoneId: Z2FDTNDATAQYW2
-      HostedZoneId: Z021667325Y5Y19G7NONS
+      HostedZoneId: "{{resolve:ssm:/my_cv/hosted_zone_id}}"
       Type: A
-      Name: staging.duytrn.com
+      Name: '{{resolve:ssm:/my_cv/domain_name}}'

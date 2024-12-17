@@ -20,7 +20,7 @@ Resources:
       PublicAccessBlockConfiguration:
         BlockPublicPolicy: false
         RestrictPublicBuckets: false
-      BucketName: manmapi-cv
+      BucketName: "{{resolve:ssm:/my_cv/bucket_name}}"
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
@@ -28,7 +28,7 @@ Resources:
   S3WebsitePolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: manmapi-cv
+      Bucket: "{{resolve:ssm:/my_cv/bucket_name}}"
       PolicyDocument:
         Version: 2012-10-17
         Statement:
