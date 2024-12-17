@@ -1,8 +1,14 @@
 import json
-
+import os
 import boto3
 
 client = boto3.client('dynamodb')
+
+RETURNED_HEADERS = {
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Origin": os.environ["ALLOWED_DOMAINS"],
+    "Access-Control-Allow-Methods": os.environ["ALLOWED_HEADERS"]
+}
 
 def handle_get(event):
     queries = event.get("queryStringParameters") or {}
@@ -47,11 +53,7 @@ def handle_get(event):
     return {
         "statusCode": 200,
         "body": json.dumps(item),
-        "headers": {
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET,OPTIONS"
-        }
+        "headers": RETURNED_HEADERS
     }
 
 def handle_post(event):
@@ -80,20 +82,12 @@ def handle_post(event):
         )
         return {
             "statusCode": 200,
-            "headers": {
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET,OPTIONS"
-            }
+            "headers": RETURNED_HEADERS
         }
     except Exception:
         return {
             "statusCode": 500,
-            "headers" : {
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET,OPTIONS"
-            },
+            "headers" : RETURNED_HEADERS,
             "body": json.dumps({
                 "message": "Has error when update counter"
             })
@@ -112,5 +106,6 @@ def lambda_handler(event, context):
                 "statusCode": 400,
                 "body": json.dumps({
                     "message": "Invalid Method"
-                })
+                }),
+                "headers": RETURNED_HEADERS
             }
