@@ -1,14 +1,150 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Hello World</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script src="./app.js"></script>
-    </head>
-    <body>
-        <h1>Hello World</h1>
-        <h2 style="float:left">Counter: <p class="counter-display">_</p></h2>
-    
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Duy Tran - CV</title>
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="./app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <p class="view-count">
+        This CV has been viewed by <strong class="counter-display">__</strong> visitors.
+        <span class="status-dot"></span>
+      </p>
+      <h1 class="name">DUY TRAN</h1>
+      <p class="contact">District 8, Ho Chi Minh City • <a href="mailto:duytran060501@gmail.com">duytran060501@gmail.com</a> • 0938576097</p>
+    </header>
+
+    <section class="section">
+      <h2>PROFESSIONAL SUMMARY</h2>
+      <p>Fast-learning, dedicated Backend Developer with a strong foundation in Data Structures and Algorithms (DSA), proficient in creating secure, efficient solutions. Skilled in building scalable systems, proactive in adopting cutting-edge technologies to enhance backend functionality.</p>
+    </section>
+
+    <section class="section">
+      <h2>SKILLS</h2>
+      <p><strong>Technical:</strong> Docker/Docker Compose, Git, Celery, Traefik, Git, FastAPI, ReactJS, PostgreSQL</p>
+      <p><strong>Programing Language:</strong> Python, Javascript/Typescript, SQL</p>
+      <p><strong>Additional:</strong> API Design, Distributed Systems, Bash, Team Player</p>
+    </section>
+
+    <section class="section">
+      <h2>CERTIFICATIONS</h2>
+      <ul>
+        <li style="font-weight: bold;">Golden Medal in Math for Traditional Olympic competition April 30 - 2017</li>
+        <li><b>IELTS:</b> 6.5 Band Score</li>
+        <li style="font-weight: bold;">AWS Certified Cloud Practitioner (<a href="https://www.credly.com/badges/55ad61e4-7f98-450f-b614-d72a7194f56b/public_url" target="_blank"><em>Certificate</em></a>)</li>
+        <li style="font-weight: bold;">AWS Certified Developer - Associated (<a href="https://www.credly.com/badges/05dcb7ab-ab45-4c84-8417-298b22ee3d34/public_url" target="_blank"><em>Certificate</em></a>)</li>
+        <li style="font-weight: bold;">AWS Certified Solution Architecture - Associated (<a href="https://www.credly.com/badges/dc135703-51d6-4511-b465-d1eda7b85cfa/public_url" target="_blank"><em>Certificate</em></a>)</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>EXPERIENCE</h2>
+
+      <div class="experience-item">
+        <div class="exp-header">
+          <div class="exp-role">
+            <strong>IPSIP Vietnam</strong><br>
+            Backend Developer
+          </div>
+          <div class="exp-location-date">
+            Ho Chi Minh, Vietnam<br>
+            08/2024 - Present
+          </div>
+        </div>
+        <p><strong>Technologies:</strong> Python, FastAPI, ORM (SQLAlchemy, SQLModel), Alembic (database migration tool), RDBMS (PostgreSQL), Version control, Traefik (Reverse proxy), Docker/Docker Compose</p>
+        <ul>
+          <li>Designed and implemented secure RESTful API endpoints, focusing on robust authentication and authorization measures for both monolithic and microservice systems.</li>
+          <li>Created Python scripts to manage Linux services as background daemons.</li>
+          <li>Implemented optimized Dockerfiles and Docker Compose configurations, achieving a 50% reduction in image size through multi-stage builds and layer optimization, leading to faster deployment times.</li>
+          <li>Managed FastAPI applications and PostgreSQL databases in both containerized and host environments, ensuring reliable deployment and operations.</li>
+        </ul>
+      </div>
+
+      <div class="experience-item">
+        <div class="exp-header">
+          <div class="exp-role">
+            Zien Solutions<br>
+            Backend Developer
+          </div>
+          <div class="exp-location-date">
+            Ho Chi Minh, Vietnam<br>
+            03/2023 - 3/2024
+          </div>
+        </div>
+        <p><strong>Technologies:</strong> Python, FastAPI, ReactJS, ORM (SQLAlchemy), Alembic (database migration tool), Celery, RDBMS (PostgreSQL), In-memory database (Redis), Version control (GIT), Docker</p>
+        <ul>
+          <li>Developed RESTful API endpoints using the FastAPI framework and GraphQL endpoints using the Strawberry library.</li>
+          <li>Researched cutting-edge technologies such as ERC4337 (Smart Contract) and AI QR, and applied them to current applications.</li>
+          <li>Created, maintained, and updated Dockerfiles at base level, implementing Docker multi-stage builds to reduce image size from 1GB to 200MB.</li>
+          <li>Responsible for creating and maintaining admin dashboards using ReactJS-based frameworks.</li>
+          <li>Created and maintained Python scripts to automate tasks such as batch data insertion, smart contract deployment, and data crawling.</li>
+          <li>Wrote unit tests to evaluate high code coverage.</li>
+        </ul>
+      </div>
+
+      <div class="experience-item">
+        <div class="exp-header">
+          <div class="exp-role">
+            Zien Solutions<br>
+            React Native Developer
+          </div>
+          <div class="exp-location-date">
+            Ho Chi Minh, Vietnam<br>
+            06/2022 - 03/2023
+          </div>
+        </div>
+        <ul>
+          <li>Collaborated on stages of systems development lifecycle from requirement gathering to production releases.</li>
+          <li>Conducted research about Bluetooth Classic and Bluetooth Low Energy. Apply it for communicate protocol between mobile app and headphone.</li>
+          <li>Built data layer, data structure to communicate with headphone. Send and receive command to/from headphone, maintain synchronization between headphone and mobile app.</li>
+          <li>Built user interface from given Figma design. Integrating UI with data layer.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>PROJECT EXPERIENCE</h2>
+      <div class="experience-item">
+        <div class="exp-header">
+          <div class="exp-role">
+            International University<br>
+            Thesis Project
+          </div>
+          <div class="exp-location-date">
+            Ho Chi Minh, Vietnam<br>
+            02/2023 to 08/2023
+          </div>
+        </div>
+        <p>A theoretical project about image classification to overcome the weakness of Vision Transformer (ViT) on small datasets. In this project, my main target is developing a hybrid model which combines the advantages of CNNs and ViTs. The result model achieving 3-5% better in accuracy for normal datasets and 10-20% better in accuracy for small datasets when compared with state-of-art CNN models.</p>
+        <ul>
+          <li>Develop hybrid model to detect plant disease on leaf.</li>
+          <li>Research theoretical behind CNN, Transformer and Vision Transformer.</li>
+          <li>Conduct data segmentation and data augmentation on given dataset.</li>
+          <li>Compare and give assessment of model with state-of-art models.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>EDUCATION</h2>
+      <ul>
+        <li><strong>University of Science - VNU</strong>, Ho Chi Minh<br>
+          Master Program - Information System (12/2024 - Present)
+        </li>
+        <li><strong>International University - VNU</strong>, Ho Chi Minh<br>
+          Automation and Control Engineering. GPA 3.64/4 (9/2019 - 9/2023)<br>
+          Full Scholarship from International University - VNU
+        </li>
+        <li><strong>Le Quy Don Highschool for gifted - Math</strong>, Quy Nhon, Binh Dinh<br>
+          Math major (9/2016 - 6/2019)
+        </li>
+      </ul>
+    </section>
+  </div>
+</body>
 </html>
 
