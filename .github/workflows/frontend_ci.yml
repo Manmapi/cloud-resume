@@ -3,7 +3,7 @@ on:
     branches:
       - 'feat/cicd'
     paths:
-      - 'frontend-app/*'
+      - 'frontend-app/**'
 jobs:
   upload_to_s3:
     runs-on: ubuntu-latest
