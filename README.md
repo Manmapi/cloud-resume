@@ -86,4 +86,3 @@ Follow these steps to deploy the project:
 
 ## Future Enhancements
 - Implement logging and monitoring with **AWS CloudWatch**.
-- Automate CI/CD pipelines using **AWS CodePipeline**.
