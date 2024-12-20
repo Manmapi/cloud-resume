@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - 'feat/cicd'
+      - feat/cicd
     paths:
       - 'frontend-app/**'
 jobs:
