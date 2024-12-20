@@ -33,14 +33,14 @@ if(window.attachEvent) {
         var curronload = window.onload;
         var newonload = function(evt) {
             curronload(evt);
-            updateVisitedCount(evt);
             getVisitedCount(evt);
+            updateVisitedCount(evt);
         };
         window.onload = newonload;
     } else {
         window.onload = function(evt) {
-            updateVisitedCount(evt);
             getVisitedCount(evt);
+            updateVisitedCount(evt);
         };
     }
 }
